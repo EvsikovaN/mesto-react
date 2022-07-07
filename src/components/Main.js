@@ -22,8 +22,6 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
       .catch((err) => console.log(err));
   }, []);
 
-  
-
   return (
     <main className="main">
       <section className="profile">
@@ -37,7 +35,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
           <div className="profile__info">
             <div className="flex-wrapper">
               <h1 className="profile__name">
-                {userName === undefined || userName === null ? "" : userName}
+                {userName}
               </h1>
               <button
                 type="button"
@@ -61,8 +59,8 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
         </button>
       </section>
       <section className="cards">
-        {cards.map((card, i) => (
-          <Card card={card} key={i} onCardClick={onCardClick}/>
+        {cards.map((card) => (
+          <Card card={card} key={card._id} onCardClick={onCardClick}/>
         ))}
       </section>
     </main>
