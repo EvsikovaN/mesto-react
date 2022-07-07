@@ -1,7 +1,29 @@
+import { useState, useEffect } from "react";
 import iconAdd from "../../src/images/icons/add.svg";
+import api from "../utils/api";
+import Card from "./Card";
 
-function Main({onEditAvatar, onEditProfile, onAddPlace}) {
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
+  const [userName, setUserName] = useState("");
+  const [userDescription, setUserDescription] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {
+    Promise.all([api.getProfileInfo(), api.getAllCards()])
+      .then((res) => {
+        const dataUser = res[0];
+        const dataCards = res[1];
+        setUserName(dataUser.name);
+        setUserDescription(dataUser.about);
+        setUserAvatar(dataUser.avatar);
+        setCards(dataCards);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   
+
   return (
     <main className="main">
       <section className="profile">
@@ -10,24 +32,39 @@ function Main({onEditAvatar, onEditProfile, onAddPlace}) {
             type="button"
             className="profile__btn profile__btn_avatar"
             onClick={onEditAvatar}
+            style={{ backgroundImage: `url(${userAvatar})` }}
           ></button>
           <div className="profile__info">
             <div className="flex-wrapper">
-              <h1 className="profile__name"></h1>
+              <h1 className="profile__name">
+                {userName === undefined || userName === null ? "" : userName}
+              </h1>
               <button
                 type="button"
                 className="profile__btn profile__btn_edit"
                 onClick={onEditProfile}
               ></button>
             </div>
-            <p className="profile__detail"></p>
+            <p className="profile__detail">
+              {userDescription === undefined || userDescription === null
+                ? ""
+                : userDescription}
+            </p>
           </div>
         </div>
-        <button type="button" className="profile__btn profile__btn_add" onClick={onAddPlace}>
+        <button
+          type="button"
+          className="profile__btn profile__btn_add"
+          onClick={onAddPlace}
+        >
           <img src={iconAdd} alt="добавить изображение" />
         </button>
       </section>
-      <section className="cards"></section>
+      <section className="cards">
+        {cards.map((card, i) => (
+          <Card card={card} key={i} onCardClick={onCardClick}/>
+        ))}
+      </section>
     </main>
   );
 }

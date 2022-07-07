@@ -4,12 +4,19 @@ import Main from "./Main.js";
 import Footer from "./Footer.js";
 import PopupWithForm from "./PopupWithForm.js";
 import ImagePopup from "./ImagePopup.js";
+import api from "../utils/api.js";
 
 function App() {
   //переменные состояния, отвечающие за видимость трёх попапов
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null)
+
+  const handleCardClick = (card) => {
+    setSelectedCard(card);
+    console.log(card)
+  }
 
   const handleEditAvatarClick = () => {
     setEditAvatarPopupOpen(true);
@@ -27,6 +34,7 @@ function App() {
     setEditAvatarPopupOpen(false);
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
+    setSelectedCard(null)
   }
 
   return (
@@ -37,6 +45,7 @@ function App() {
         onEditAvatar={handleEditAvatarClick}
         onEditProfile={handleEditProfileClick}
         onAddPlace={handleAddPlaceClick}
+        onCardClick={handleCardClick}
       />
 
       <Footer />
@@ -110,7 +119,7 @@ function App() {
 
       <PopupWithForm name="delete-card" title="Вы уверены?" submit="Да" onClose={closeAllPopups} />
       
-      <ImagePopup onClose={closeAllPopups} />
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
     </div>
   );
 }
