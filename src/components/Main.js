@@ -2,10 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import iconAdd from "../../src/images/icons/add.svg";
 import api from "../utils/api";
 import Card from "./Card";
-import {CurrentUserContext} from '../contexts/CurrentUserContext';
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  
   const [cards, setCards] = useState([]);
   const currentUser = useContext(CurrentUserContext);
 
@@ -17,6 +16,39 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    if (!isLiked) {
+      api
+        .setLike(card._id)
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === card._id ? newCard : c))
+          );
+        })
+        .catch((err) => console.error(err));
+    } else {
+      api
+        .removeLike(card._id)
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === card._id ? newCard : c))
+          );
+        })
+        .catch((err) => console.error(err));
+    }
+  }
+
+  function handleCardDelete(card) {
+    api
+      .deleteCard(card._id)
+      .then((newCard) => {
+        setCards((state) => state.filter((item) => item._id !== card._id));
+      })
+      .catch((err) => console.error(err));
+  }
 
   return (
     <main className="main">
@@ -30,9 +62,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
           ></button>
           <div className="profile__info">
             <div className="flex-wrapper">
-              <h1 className="profile__name">
-                {currentUser.name}
-              </h1>
+              <h1 className="profile__name">{currentUser.name}</h1>
               <button
                 type="button"
                 className="profile__btn profile__btn_edit"
@@ -56,7 +86,13 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
       </section>
       <section className="cards">
         {cards.map((card) => (
-          <Card card={card} key={card._id} onCardClick={onCardClick}/>
+          <Card
+            card={card}
+            key={card._id}
+            onCardClick={onCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+          />
         ))}
       </section>
     </main>
