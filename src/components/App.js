@@ -4,6 +4,7 @@ import Main from "./Main.js";
 import Footer from "./Footer.js";
 import PopupWithForm from "./PopupWithForm.js";
 import ImagePopup from "./ImagePopup.js";
+import EditProfilePopup from "./EditProfilePopup";
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 import api from "../utils/api.js";
 
@@ -47,6 +48,16 @@ function App() {
     setSelectedCard(null)
   }
 
+  const handleUpdateUser = (data) => {
+    api
+      .setProfileInfo(data)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className="page__content">
       <CurrentUserContext.Provider value={currentUser}>
@@ -61,30 +72,7 @@ function App() {
 
         <Footer />
 
-        <PopupWithForm name="edit-profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} >
-          <section className="popup__form-section">
-            <input
-              className="popup__input popup__input_type_name"
-              type="text"
-              name="name"
-              minLength="2"
-              maxLength="40"
-              required
-            />
-            <span className="popup__form-error-message"></span>
-          </section>
-          <section className="popup__form-section">
-            <input
-              className="popup__input popup__input_type_detail"
-              type="text"
-              name="about"
-              minLength="2"
-              maxLength="200"
-              required
-            />
-            <span className="popup__form-error-message"></span>
-          </section>
-        </PopupWithForm>
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
 
         <PopupWithForm name="edit-avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} >
           <section className="popup__form-section">

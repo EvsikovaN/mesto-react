@@ -1,4 +1,4 @@
-function PopupWithForm({ title, name, submit = "Сохранить", children, isOpen, onClose }) {
+function PopupWithForm({ title, name, submit = "Сохранить", children, isOpen, onClose, onSubmit }) {
   return (
     <section className={`popup ${isOpen ? "popup_opened" : ""}`} id={name}>
       <div className="popup__container">
@@ -8,6 +8,7 @@ function PopupWithForm({ title, name, submit = "Сохранить", children, i
           name={`${name}-popup`}
           action="#"
           method="post"
+          onSubmit={onSubmit}
           noValidate
         >
           {children}
