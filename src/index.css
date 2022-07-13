@@ -25,6 +25,7 @@
 @import url(../src/blocks/like/like.css);
 @import url(../src/blocks/like/__counter/like__counter.css);
 @import url(../src/blocks/trash/trash.css);
+@import url(../src/blocks/trash/_hidden/trash_hidden.css);
 @import url(../src/blocks/popup/popup.css);
 @import url(../src/blocks/popup/__close/popup__close.css);
 @import url(../src/blocks/popup/__container/popup__container.css);
