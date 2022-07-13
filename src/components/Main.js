@@ -1,54 +1,10 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import iconAdd from "../../src/images/icons/add.svg";
-import api from "../utils/api";
 import Card from "./Card";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
-  const [cards, setCards] = useState([]);
+function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onCardLike, onCardDelete}) {
   const currentUser = useContext(CurrentUserContext);
-
-  useEffect(() => {
-    Promise.all([api.getAllCards()])
-      .then((res) => {
-        const dataCards = res[0];
-        setCards(dataCards);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
-
-    if (!isLiked) {
-      api
-        .setLike(card._id)
-        .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
-          );
-        })
-        .catch((err) => console.error(err));
-    } else {
-      api
-        .removeLike(card._id)
-        .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
-          );
-        })
-        .catch((err) => console.error(err));
-    }
-  }
-
-  function handleCardDelete(card) {
-    api
-      .deleteCard(card._id)
-      .then((newCard) => {
-        setCards((state) => state.filter((item) => item._id !== card._id));
-      })
-      .catch((err) => console.error(err));
-  }
 
   return (
     <main className="main">
@@ -90,8 +46,8 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) {
             card={card}
             key={card._id}
             onCardClick={onCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+            onCardLike={onCardLike}
+            onCardDelete={onCardDelete}
           />
         ))}
       </section>
