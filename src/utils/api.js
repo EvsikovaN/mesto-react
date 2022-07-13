@@ -31,7 +31,7 @@ export class Api {
     return fetch(`${this._url}users/me/avatar `, {
       method: "PATCH",
       headers: this._headers,
-      body: JSON.stringify({ avatar: data.link }),
+      body: JSON.stringify({ avatar: data}),
     }).then((res) => this._checkResStatus(res));
   }
 
