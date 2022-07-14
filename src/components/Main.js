@@ -26,9 +26,7 @@ function Main({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, cards, onC
               ></button>
             </div>
             <p className="profile__detail">
-              {currentUser.about === undefined || currentUser.about === null
-                ? ""
-                : currentUser.about}
+              {currentUser.about ?? "" }
             </p>
           </div>
         </div>
